@@ -182,6 +182,9 @@ public class GameMain {
                 powerUpActive = true;
                 powerUpPresentOnLevel = false;
                 powerUpPresenceCounter = 0;
+		enemyEscapeCoordinates = getFarthestCorner(level, enemyRow, enemyColumn);
+            	enemyEscapeRow = enemyEscapeCoordinates[0];
+            	enemyEscapeColumn = enemyEscapeCoordinates[1];    
             }
 
             //drawing level and a playerMark; minden körben mindenki kirajzolása = "mozi"
