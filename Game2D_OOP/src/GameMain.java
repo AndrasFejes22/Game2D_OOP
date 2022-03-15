@@ -33,7 +33,7 @@ public class GameMain {
 	        do {
 	            initLevel(level);
 	            //addRandomWalls(level, 10, 10);
-	            addRandomWalls(level, 5, 6);
+	            addRandomWalls(level, 7, 7);
 	            isPassableCounter++;
 	        }while(!isPassable(level));
 
@@ -55,25 +55,25 @@ public class GameMain {
 	        GameResult gameResult = GameResult.TIE; //default
 
 	        //////PLAYER//////
-
-	        String playerMark = "O"; //represents the player
 	        //random first coordinates for the player
 	        Coordinates playerCoordinates = getRandomStartingCoordinates(level);
-	        
+	        Entity player = new Entity("O", playerCoordinates, getFarthestCorner(level, playerCoordinates), Direction.RIGHT);
+	        /*
+	        String playerMark = "O"; //represents the player
 	        Coordinates playerEscapeCoordinates = getFarthestCorner(level, playerCoordinates);
-	        
 	        Direction playerDirection = Direction.RIGHT; //First, the player moving to the right
-
+	        */
 	        //////ENEMY//////
 
-	        String enemyMark = "@"; //represents the enemy
+	        
 	        //random first coordinates for the enemy
-	        Coordinates enemyCoordinates = getRandomStartingCoordinatesForADistance(level, playerCoordinates, 10); 
-	        
+	        Coordinates enemyCoordinates = getRandomStartingCoordinatesForADistance(level, player.getCoordinates(), 10); 
+	        Entity enemy = new Entity("@", enemyCoordinates, getFarthestCorner(level, enemyCoordinates), Direction.LEFT);
+	        /*
+	        String enemyMark = "@"; //represents the enemy
 	        Coordinates enemyEscapeCoordinates = getFarthestCorner(level, enemyCoordinates);
-	        
 	        Direction enemyDirection = Direction.LEFT; //First, the player moving to the left
-
+	        */
 
 	        //////POWER-UP//////
 
@@ -94,29 +94,34 @@ public class GameMain {
 				// player irányváltoztatása
 				if (powerUpActive) {// powerup aktív = a játékos kergeti az enemyt
 
-					playerDirection = getShortestPath(level, playerDirection, playerCoordinates, enemyCoordinates);
+					//playerDirection = getShortestPath(level, playerDirection, playerCoordinates, enemyCoordinates);
+					player.setDirection(getShortestPath(level, player.getDirection(), player.getCoordinates(), enemy.getCoordinates()));
 
 				} else {
 					if (powerUpPresentOnLevel) {
 
 						// megy a powerUp felé
-						playerDirection = getShortestPath(level, playerDirection, playerCoordinates,
-								powerUpCoordinates);
+						//playerDirection = getShortestPath(level, playerDirection, playerCoordinates, powerUpCoordinates);
+						player.setDirection(getShortestPath(level, player.getDirection(), player.getCoordinates(), powerUpCoordinates));
+								
 
 					} else {
 						// player menekül:
 						if (iterationNumber % 50 == 0) {// választás 50 lépésenként
 							// inkább meneküljön a legtávolabbi pontba:
-							playerEscapeCoordinates = getFarthestCorner(level, playerCoordinates);
+							//playerEscapeCoordinates = getFarthestCorner(level, playerCoordinates);
+							player.setEscapeCoordinates(getFarthestCorner(level, player.getCoordinates()));
 
 						}
-						playerDirection = getShortestPath(level, playerDirection, playerCoordinates,
-								playerEscapeCoordinates);// minden körben derékszögû irányváltoztatás
+						//playerDirection = getShortestPath(level, playerDirection, playerCoordinates,playerEscapeCoordinates);
+						player.setDirection(getShortestPath(level, player.getDirection(), player.getCoordinates(), player.getEscapeCoordinates()));
+								
 					}
 				}
 				// kiszedjük a koordinátákat és átadjuk a draw()-nak
 				// ez a 3 sor a léptetése a playernek
-				playerCoordinates = makeMove(playerDirection, level, playerCoordinates); // új értéket kap a
+				//playerCoordinates = makeMove(player.getDirection(), level, playerCoordinates);//VIDEÓS // új értéket kap a
+				player.setCoordinates(makeMove(player.getDirection(), level, player.getCoordinates())); // új értéket kap a
 																							// playerCoordinates
 																							// (paraméter az elõzõ)
 
@@ -127,21 +132,21 @@ public class GameMain {
 				if (powerUpActive) {
 
 					if (iterationNumber % 50 == 0) {// választás 50 lépésenként
-						enemyEscapeCoordinates = getFarthestCorner(level, enemyCoordinates);
+						enemy.setEscapeCoordinates(getFarthestCorner(level, enemy.getCoordinates()));
 
 					}
-					enemyDirection = getShortestPath(level, enemyDirection, enemyCoordinates, enemyEscapeCoordinates);
+					enemy.setDirection(getShortestPath(level, enemy.getDirection(), enemy.getCoordinates(), enemy.getEscapeCoordinates()));
 				} else {
 
 					// felokosítva:
 					// enemy üldöz:
-					enemyDirection = getShortestPath(level, enemyDirection, enemyCoordinates, playerCoordinates);
+					enemy.setDirection(getShortestPath(level, enemy.getDirection(), enemy.getCoordinates(), player.getCoordinates()));
 				}
 				// enemy léptetése:
 				// kiszedjük a koordinátákat és átadjuk a draw()-nak
 				if (iterationNumber % 2 == 0) {// minden 2. körben lép csak
-					enemyCoordinates = makeMove(enemyDirection, level, enemyCoordinates);// frissül
-
+					//enemyCoordinates = makeMove(enemyDirection, level, enemyCoordinates);// frissül
+					enemy.setCoordinates(makeMove(enemy.getDirection(), level, enemy.getCoordinates()));// frissül
 				}
 
 				// powerUp updateing:
@@ -168,35 +173,38 @@ public class GameMain {
 					powerUpActiveCounter = 0;
 					powerUpCoordinates = getRandomStartingCoordinates(level);
 
-					playerEscapeCoordinates = getFarthestCorner(level, playerCoordinates);
+					player.setEscapeCoordinates(getFarthestCorner(level, player.getCoordinates()));
 
 				}
 
 				// player-powerUp interaction handling:
-				if (powerUpPresentOnLevel && playerCoordinates.isSame(powerUpCoordinates)) {
+				if (powerUpPresentOnLevel && player.getCoordinates().isSame(powerUpCoordinates)) {
 					powerUpActive = true;
 					powerUpPresentOnLevel = false;
 					powerUpPresenceCounter = 0;
-					enemyEscapeCoordinates = getFarthestCorner(level, enemyCoordinates);
+					enemy.setEscapeCoordinates(getFarthestCorner(level, enemy.getCoordinates()));
 
 				}
 
 				// drawing level and a playerMark; minden körben mindenki kirajzolása = "mozi"
-				draw(level, playerMark, playerCoordinates, enemyMark, enemyCoordinates, powerUpMark, powerUpCoordinates,
+				draw(level, player.getMark(), player.getCoordinates(), enemy.getMark(), enemy.getCoordinates(), powerUpMark, powerUpCoordinates,
 						powerUpPresentOnLevel, powerUpActive);
 
 				// várakoztatás
-				addSomeDelay(iterationNumber, 200L);// print the iteration number and do the delay
+				addSomeDelay(iterationNumber, 150L);// print the iteration number and do the delay
 
 				// ha az enemy elkapta a playert (= a koordinátáik megegyeznek), akkor game over
-				if (playerCoordinates.isSame(enemyCoordinates)) {
-					//counterPlayerLifes++;// több élet?
+				if (player.getCoordinates().isSame(enemy.getCoordinates())) {
+					
 					if (powerUpActive) {
 						gameResult = GameResult.WIN;
+						break;
 					} else {
-						//if(counterPlayerLifes == playerLifes) {
+						//playerLifes--;// több élet?
+						//if(playerLifes == 0) {
 	                        gameResult = GameResult.LOSE;
 	                        System.out.println("The enemy caught the player!");
+	                        //break;
 	                    //}
 					}
 					break;
@@ -708,7 +716,7 @@ public class GameMain {
 	            }
 	            System.out.println();
 	        }
-	        System.out.println("Player lives: " + (playerLifes - counterPlayerLifes));
+	        System.out.println("Player lives: " + playerLifes);
 	        if(powerUpActive) {
 	            System.out.println("power-up is active!");
 	        }
