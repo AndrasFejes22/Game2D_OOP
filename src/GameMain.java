@@ -166,12 +166,15 @@ public class GameMain {
                 powerUpPresenceCounter = 0; //*meg ez csinálja hogy mindig előlről kezdődhessen a számlálás és 20 körig van pUp, 20 körig nincs
                 //és így tovább
             }
-            if(powerUpActiveCounter >= powerUpInLevel*2) {
+            if(powerUpActiveCounter >= powerUpInLevel) {
                 powerUpActive = false;
                 powerUpActiveCounter = 0;
                 powerUpStartingCoordinates = getRandomStartingCoordinates(level);
                 powerUpRow = powerUpStartingCoordinates[0];
                 powerUpColumn = powerUpStartingCoordinates[1];
+		playerEscapeCoordinates = getFarthestCorner(level, playerRow, playerColumn);
+		playerEscapeRow = playerEscapeCoordinates[0];
+		playerEscapeColumn = playerEscapeCoordinates[1];    
             }
 
             //player-powerUp interaction handling:
