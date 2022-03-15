@@ -19,6 +19,8 @@ public class GameMain {
 	    static int width = 40;
 	    static int powerUpInLevel = height;
 	    static final int  GAME_LOOP_NUMBER = 300;
+	    static int playerLifes = 2;
+	    static int counterPlayerLifes = 0;
 	    static Random RANDOM = new Random(); //ha ez = new Random(100L); pseudo-random numbers/field does not change
 	    //static Random RANDOM = new Random(160L);
 	    //static Random RANDOM = new Random(27L); //100L (1,4) 20,20
@@ -187,12 +189,15 @@ public class GameMain {
 				addSomeDelay(iterationNumber, 200L);// print the iteration number and do the delay
 
 				// ha az enemy elkapta a playert (= a koordinátáik megegyeznek), akkor game over
-				if (playerCoordinates.isSame(enemyCoordinates)) {// több élet?
+				if (playerCoordinates.isSame(enemyCoordinates)) {
+					//counterPlayerLifes++;// több élet?
 					if (powerUpActive) {
 						gameResult = GameResult.WIN;
 					} else {
-						gameResult = GameResult.LOSE;
-						System.out.println("The enemy caught the player!");
+						//if(counterPlayerLifes == playerLifes) {
+	                        gameResult = GameResult.LOSE;
+	                        System.out.println("The enemy caught the player!");
+	                    //}
 					}
 					break;
 				}
@@ -235,9 +240,9 @@ public class GameMain {
 	                }
 	            }
 	        }
-	        Coordinates farthestCorner = new Coordinates();
-	        farthestCorner.setRow(farthestRow);
-	        farthestCorner.setColumn(farthestColumn);
+	        Coordinates farthestCorner = new Coordinates(farthestRow, farthestColumn);//késõbb refactor/inline...
+	        //farthestCorner.setRow(farthestRow);
+	        //farthestCorner.setColumn(farthestColumn);
 	        return farthestCorner;
 	    }
 
@@ -499,11 +504,13 @@ public class GameMain {
 	            //**nem lehet a két koordináta közelebb egymáshoz mint distance pályaegység
 	        }while(counter < 1000
 	                && (!level[randomRow][randomColumn].equals(" ") || calculateDistance(randomRow, randomColumn, playerStartingRow, playerStartingColumn) < distance));
-	        Coordinates startingCoordinates = new Coordinates();
-	        startingCoordinates.setRow(randomRow);
-	        startingCoordinates.setColumn(randomColumn);
+	        
+	        //helyi Coordinates object volt látrehozva konstruktorával-->átment inline-ba: 3 sorral kevesebb
+	        //és a memóriát sem foglaljuk
+	        //startingCoordinates.setRow(randomRow);
+	        //startingCoordinates.setColumn(randomColumn);
 
-	        return startingCoordinates;
+	        return new Coordinates(randomRow, randomColumn);
 	    }
 
 	    private static int calculateDistance(int row1, int column1, int row2, int column2) {
@@ -522,12 +529,15 @@ public class GameMain {
 	            randomColumn = RANDOM.nextInt(width);
 
 	        }while(!level[randomRow][randomColumn].equals(" "));
-
+	        /*
+	         * ez volt, konstruktor és inline elõtt:
 	        Coordinates startingCoordinates = new Coordinates();
 	        startingCoordinates.setRow(randomRow);
 	        startingCoordinates.setColumn(randomColumn);
-
 	        return startingCoordinates;
+	        */
+	        
+	        return new Coordinates(randomRow, randomColumn);
 	    }
 
 	    //WALLS
@@ -573,9 +583,9 @@ public class GameMain {
 
 	    //maga a mozgás
 	    static Coordinates makeMove(Direction direction, String[][] level, Coordinates oldCoordinates){
-	        Coordinates newCoordinates = new Coordinates();// new Coordinate object
-	        newCoordinates.setRow(oldCoordinates.getRow());//setting old coordinates
-	        newCoordinates.setColumn(oldCoordinates.getColumn());
+	        Coordinates newCoordinates = new Coordinates(oldCoordinates.getRow(), oldCoordinates.getColumn());// new Coordinate object
+	        //newCoordinates.setRow(oldCoordinates.getRow());//setting old coordinates
+	        //newCoordinates.setColumn(oldCoordinates.getColumn());
 	        switch (direction) {
 	            case UP:
 	                if (level[oldCoordinates.getRow() - 1][oldCoordinates.getColumn()].equals(" ")) { //can go UP
@@ -683,9 +693,9 @@ public class GameMain {
 
 	        for (int row = 0; row < height; row++) {
 	            for (int column = 0; column < width; column++) {
-	                Coordinates coordinatesToDraw = new Coordinates();
-	                coordinatesToDraw.setRow(row);
-	                coordinatesToDraw.setColumn(column);
+	                Coordinates coordinatesToDraw = new Coordinates(row, column);
+	                //coordinatesToDraw.setRow(row);
+	               // coordinatesToDraw.setColumn(column);
 	                if (coordinatesToDraw.isSame(playerCoordinates)) {
 	                    System.out.print(playerMark);
 	                } else if(coordinatesToDraw.isSame(enemyCoordinates)) {
@@ -698,6 +708,7 @@ public class GameMain {
 	            }
 	            System.out.println();
 	        }
+	        System.out.println("Player lives: " + (playerLifes - counterPlayerLifes));
 	        if(powerUpActive) {
 	            System.out.println("power-up is active!");
 	        }

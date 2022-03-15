@@ -1,7 +1,16 @@
 
 public class Coordinates {
 	private int row;
-    private int column;
+	private int column;
+    /**
+	 * @param row
+	 * @param column
+	 */
+	public Coordinates(int row, int column) {
+		super();
+		this.row = row;
+		this.column = column;
+	}
 
     public int getRow() {
         return row;
