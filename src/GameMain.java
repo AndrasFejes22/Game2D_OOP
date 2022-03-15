@@ -17,7 +17,7 @@ public class GameMain {
     static int width = 40;
     static int powerUpInLevel = height;
     static final int  GAME_LOOP_NUMBER = 300;
-    static Random RANDOM = new Random(); //ha ez = new Random(100L); akkor nem változik a pálya mert álvéletlen számokat generál
+    static Random RANDOM = new Random(); //ha ez = new Random(100L); pseudo-random numbers/field does not change
     //static Random RANDOM = new Random(160L);
     //static Random RANDOM = new Random(27L); //100L (1,4) 20,20
     public static void main(String[] args) throws InterruptedException {
@@ -36,7 +36,7 @@ public class GameMain {
         System.out.println("The No " + isPassableCounter + " board is passable");
 
         ////////DRAW ASTERISKS OR NOT/////////
-        //overloaded isPassable() kirajzolja-e a csillagokat
+        //overloaded isPassable() //drawing asterisks
         //isPassable(level, true);
         isPassable(level, false);
 
