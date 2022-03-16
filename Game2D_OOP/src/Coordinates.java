@@ -31,4 +31,12 @@ public class Coordinates {
     public boolean isSame(Coordinates other){
         return this.row == other.row && this.column == other.column;
     }
+    
+    public int distanceFrom(Coordinates other) {//pl randomCoordinates.calculateDistance(playerStartingCoordinates);
+
+        int rowDifference = Math.abs(this.row - other.getRow());
+        int columnDifference = Math.abs(this.column - other.getColumn());
+        return rowDifference + columnDifference;
+        
+    }
 }

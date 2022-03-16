@@ -5,9 +5,7 @@ public class Entity {
 	
 	private Coordinates coordinates; 
     
-    private Coordinates escapeCoordinates;
     
-    private Direction direction; 
 
     
     /**
@@ -16,12 +14,11 @@ public class Entity {
 	 * @param escapeCoordinates
 	 * @param direction
 	 */
-	public Entity(String mark, Coordinates coordinates, Coordinates escapeCoordinates, Direction direction) {
+	public Entity(String mark, Coordinates coordinates)  {
 		super();
 		this.mark = mark;
 		this.coordinates = coordinates;
-		this.escapeCoordinates = escapeCoordinates;
-		this.direction = direction;
+		
 	}
 
 
@@ -35,15 +32,6 @@ public class Entity {
 	}
 
 
-	public Coordinates getEscapeCoordinates() {
-		return escapeCoordinates;
-	}
-
-
-	public Direction getDirection() {
-		return direction;
-	}
-
 
 	public void setMark(String mark) {
 		//ellenõrzés
@@ -56,14 +44,7 @@ public class Entity {
 	}
 
 
-	public void setEscapeCoordinates(Coordinates escapeCoordinates) {
-		this.escapeCoordinates = escapeCoordinates;
-	}
-
-
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
+	
 	
 	
 
