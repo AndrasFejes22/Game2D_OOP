@@ -1,8 +1,8 @@
 
 public class Powerup extends Entity {
 	
-	boolean presentOnLevel = false;
-	//boolean presentOnLevel = true; //élbõl is jelen LEHET egy régebbi powerUp update hiba miatt*****
+	//boolean presentOnLevel = false;
+	boolean presentOnLevel = true; //élbõl is jelen LEHET egy régebbi powerUp update hiba miatt*****
     boolean active = false;
     int presenceCounter = 0;
     int activeCounter = 0;
