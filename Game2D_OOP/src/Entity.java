@@ -4,6 +4,8 @@ public class Entity {
 	private String mark;
 	
 	private Coordinates coordinates; 
+	
+	//private Level level;
     
     
 

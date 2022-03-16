@@ -31,7 +31,7 @@ public class GameMain {
 	    	int isPassableCounter = 0;
 	        do {
 	        	level = new Level(RANDOM, height, width);
-	        	level.addRandomWalls(7,7);
+	        	level.addRandomWalls(3,4);
 	            isPassableCounter++;
 	        }while(!level.isPassable());
 	        
@@ -63,8 +63,7 @@ public class GameMain {
 	        ////////VIZSGÁLAT VÉGE///////
 
 
-	        //Who will win?
-	        GameResult gameResult = GameResult.TIE; //default
+	        
 
 	        //////PLAYER//////
 	        //random first coordinates for the player
@@ -89,32 +88,40 @@ public class GameMain {
 
 	        //////POWER-UP//////
 
-	        String powerUpMark = "*"; //represents the power-up, egy helyben fog állni
-	        //random first coordinates for the power-up
-	        Coordinates powerUpCoordinates = getRandomStartingCoordinates(level);
 	        
+	        //random first coordinates for the power-up
+	        //Coordinates powerUpCoordinates = getRandomStartingCoordinates(level);
+	        
+	        Powerup powerup = new Powerup("*", getRandomStartingCoordinates(level));
+	        //van powerup, ezek beállítódnak maguktól:
+	        /*
+	        String powerUpMark = "*"; //represents the power-up, egy helyben fog állni
 	        boolean powerUpPresentOnLevel = false;
 	        boolean powerUpActive = false;
 	        int powerUpPresenceCounter = 0;
 	        int powerUpActiveCounter = 0;
-
+	        
+	        */
+	        
+	        //Who will win?
+	        GameResult gameResult = GameResult.TIE; //default
 
 			for (int iterationNumber = 1; iterationNumber < GAME_LOOP_NUMBER; iterationNumber++) {// lépteti a karaktert
 																									// -->makeMove
 																									// method
 				/////// UPDATED PLAYER MOVING////////
 				// player irányváltoztatása
-				if (powerUpActive) {// powerup aktív = a játékos kergeti az enemyt
+				if (powerup.isActive()) {// powerup aktív = a játékos kergeti az enemyt
 
 					//playerDirection = getShortestPath(level, playerDirection, playerCoordinates, enemyCoordinates);
 					player.setDirection(level.getShortestPath(player.getDirection(), player.getCoordinates(), enemy.getCoordinates()));
 
 				} else {
-					if (powerUpPresentOnLevel) {
+					if (powerup.isPresentOnLevel()) {
 
 						// megy a powerUp felé
 						//playerDirection = getShortestPath(level, playerDirection, playerCoordinates, powerUpCoordinates);
-						player.setDirection(level.getShortestPath(player.getDirection(), player.getCoordinates(), powerUpCoordinates));
+						player.setDirection(level.getShortestPath(player.getDirection(), player.getCoordinates(), powerup.getCoordinates()));
 								
 
 					} else {
@@ -142,7 +149,7 @@ public class GameMain {
 
 				// enemy irányváltoztatása: ez nincs benne if blokkban mert leköveti a player
 				// mozgását, (utánamegy), tehát a player mozgása vezérli
-				if (powerUpActive) {
+				if (powerup.isActive()) {
 
 					if (iterationNumber % 50 == 0) {// választás 50 lépésenként, ez nem oké még szerintem
 						enemy.setEscapeCoordinates(level.getFarthestCorner(enemy.getCoordinates()));
@@ -162,46 +169,59 @@ public class GameMain {
 					enemy.setCoordinates(makeMove(enemy.getDirection(), level, enemy.getCoordinates()));// frissül
 				}
 
-				// powerUp updateing:
-				if (powerUpActive) {
-					powerUpActiveCounter++;
+				//////POWERUP UPDATEING/////
+				
+				if (powerup.isActive()) {
+					powerup.incrementActiveCounter();
 				} else {
-					powerUpPresenceCounter++;// minden iterációban növeljük eggyel a számlálót
+					powerup.incrementPrescenceCounter();// EZZEL INDUL A POWERUP////minden iterációban növeljük eggyel a számlálót
 				}
 				// powerUpPresenceCounter mennyi ideig van a pályán
-				if (powerUpPresenceCounter >= powerUpInLevel) {// ez*
-					if (powerUpPresentOnLevel) {// jelen van, és fog kapni random koordinátákat
-						powerUpCoordinates = getRandomStartingCoordinates(level);// frissül
+				//if (powerUpPresenceCounter >= powerUpInLevel) {// ez*
+				if (powerup.getPresenceCounter() >= powerUpInLevel) {// ez*
+					if (powerup.isPresentOnLevel()) {// jelen van, és fog kapni random koordinátákat
+						powerup.setCoordinates(getRandomStartingCoordinates(level));// frissül
 
 					}
-					powerUpPresentOnLevel = !powerUpPresentOnLevel; // vagy a pályán van, vagy nincs, és mindig
-																	// kiváltjuk x (most 20) körönként ennek az
+					//powerUpPresentOnLevel = !powerUpPresentOnLevel; 
+					//powerup.hideOnLevel();//****** eze így eredetileg hibás a flette lévõ sor nem váltja ki
+					//ez jobb: (kiváltja)
+					
+					if (powerup.isPresentOnLevel()){				
+						powerup.hideOnLevel();
+					}else {
+					powerup.showOnLevel(); // vagy a pályán van, vagy nincs, és mindig///?????
+					}												// kiváltjuk x (most 20) körönként ennek az
 																	// ellenkezõjét
-					powerUpPresenceCounter = 0; // *meg ez csinálja hogy mindig elõlrõl kezdõdhessen a számlálás és 20
+					powerup.resetPrescenceCounter(); // *meg ez csinálja hogy mindig elõlrõl kezdõdhessen a számlálás és 20
 												// körig van pUp, 20 körig nincs
 					// és így tovább
 				}
-				if (powerUpActiveCounter >= powerUpInLevel) {
-					powerUpActive = false;
-					powerUpActiveCounter = 0;
-					powerUpCoordinates = getRandomStartingCoordinates(level);
+				if (powerup.getActiveCounter() >= powerUpInLevel) {
+					//powerUpActive = false;
+					powerup.deactivate();
+					//powerUpActiveCounter = 0;
+					powerup.resetActiveCounter();
+					powerup.setCoordinates(getRandomStartingCoordinates(level));
 
 					player.setEscapeCoordinates(level.getFarthestCorner(player.getCoordinates()));
 
 				}
 
 				// player-powerUp interaction handling:
-				if (powerUpPresentOnLevel && player.getCoordinates().isSame(powerUpCoordinates)) {
-					powerUpActive = true;
-					powerUpPresentOnLevel = false;
-					powerUpPresenceCounter = 0;
+				if (powerup.isPresentOnLevel() && player.getCoordinates().isSame(powerup.getCoordinates())) {
+					//powerUpActive = true;
+					powerup.activate();
+					//powerUpPresentOnLevel = false;
+					powerup.hideOnLevel();
+					//powerUpPresenceCounter = 0;
+					powerup.resetPrescenceCounter();
 					enemy.setEscapeCoordinates(level.getFarthestCorner(enemy.getCoordinates()));
 
 				}
 
 				// drawing level and a playerMark; minden körben mindenki kirajzolása = "mozi"
-				draw(level, player.getMark(), player.getCoordinates(), enemy.getMark(), enemy.getCoordinates(), powerUpMark, powerUpCoordinates,
-						powerUpPresentOnLevel, powerUpActive);
+				draw(level, player, enemy, powerup);
 
 				// várakoztatás
 				addSomeDelay(iterationNumber, 150L);// print the iteration number and do the delay
@@ -209,7 +229,7 @@ public class GameMain {
 				// ha az enemy elkapta a playert (= a koordinátáik megegyeznek), akkor game over
 				if (player.getCoordinates().isSame(enemy.getCoordinates())) {
 					
-					if (powerUpActive) {
+					if (powerup.isActive()) {
 						gameResult = GameResult.WIN;
 						break;
 					} else {
@@ -304,21 +324,19 @@ public class GameMain {
 	    }
 	    
 	    //pálya és játékosok kirajzolása
-		public static void draw(Level level, String playerMark, Coordinates playerCoordinates, String enemyMark,
-				Coordinates enemyCoordinates, String powerUpMark, Coordinates powerUpCoordinates,
-				boolean powerUpPresentOnLevel, boolean powerUpActive) {
+		public static void draw(Level level, Entity player, Entity enemy, Powerup powerUp) {
 
 			for (int row = 0; row < height; row++) {
 				for (int column = 0; column < width; column++) {
 					Coordinates coordinatesToDraw = new Coordinates(row, column);
 					// coordinatesToDraw.setRow(row);
 					// coordinatesToDraw.setColumn(column);
-					if (coordinatesToDraw.isSame(playerCoordinates)) {
-						System.out.print(playerMark);
-					} else if (coordinatesToDraw.isSame(enemyCoordinates)) {
-						System.out.print(enemyMark);
-					} else if (powerUpPresentOnLevel && coordinatesToDraw.isSame(powerUpCoordinates)) {
-						System.out.print(powerUpMark);
+					if (coordinatesToDraw.isSame(player.getCoordinates())) {
+						System.out.print(player.getMark());
+					} else if (coordinatesToDraw.isSame(enemy.getCoordinates())) {
+						System.out.print(enemy.getMark());
+					} else if (powerUp.isPresentOnLevel() && coordinatesToDraw.isSame(powerUp.getCoordinates())) {
+						System.out.print(powerUp.getMark());
 					} else {
 						System.out.print(level.getCell(coordinatesToDraw));
 					}
@@ -326,10 +344,10 @@ public class GameMain {
 				System.out.println();
 			}
 			System.out.println("Player lives: " + playerLifes);
-			if (powerUpActive) {
+			if (powerUp.isActive()) {
 				System.out.println("power-up is active!");
 			}
-			if (powerUpPresentOnLevel) {
+			if (powerUp.isPresentOnLevel()) {
 				System.out.println("power-up is on the board!");
 			}
 
