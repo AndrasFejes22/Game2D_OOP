@@ -184,15 +184,15 @@ public class GameMain {
 
 					}
 					//powerUpPresentOnLevel = !powerUpPresentOnLevel; 
-					powerup.hideOnLevel();//****** eze így eredetileg hibás a flette lévõ sor nem váltja ki
+					//powerup.hideOnLevel();//****** eze így eredetileg hibás a flette lévõ sor nem váltja ki
 					//ez jobb: (kiváltja)
-					/*
+					
 					if (powerup.isPresentOnLevel()){				
 						powerup.hideOnLevel();
 					}else {
 					powerup.showOnLevel(); // vagy a pályán van, vagy nincs, és mindig///?????
 					}												// kiváltjuk x (most 20) körönként ennek az
-					*/												// ellenkezõjét
+																	// ellenkezõjét
 					powerup.resetPrescenceCounter(); // *meg ez csinálja hogy mindig elõlrõl kezdõdhessen a számlálás és 20
 												// körig van pUp, 20 körig nincs
 					// és így tovább
