@@ -69,7 +69,7 @@ public class GameMain {
 	        //random first coordinates for the player
 	        //Coordinates playerCoordinates = getRandomStartingCoordinates(level);
 	        Coordinates playerCoordinates = level.getRandomCoordinates();
-	        MovingEntity player = new MovingEntity("O", playerCoordinates, level.getFarthestCorner(playerCoordinates), Direction.RIGHT);
+	        MovingEntity player = new MovingEntity("O", playerCoordinates, level.getFarthestCorner(playerCoordinates), Direction.RIGHT, level);
 	        /*
 	        String playerMark = "O"; //represents the player
 	        Coordinates playerEscapeCoordinates = getFarthestCorner(level, playerCoordinates);
@@ -79,8 +79,8 @@ public class GameMain {
 
 	        
 	        //random first coordinates for the enemy
-	        Coordinates enemyCoordinates = getRandomStartingCoordinatesForADistance(level, player.getCoordinates(), 10); 
-	        MovingEntity enemy = new MovingEntity("@", enemyCoordinates, level.getFarthestCorner(enemyCoordinates), Direction.LEFT);
+	        Coordinates enemyCoordinates = level.getRandomStartingCoordinatesForADistance(player.getCoordinates(), 10); 
+	        MovingEntity enemy = new MovingEntity("@", enemyCoordinates, level.getFarthestCorner(enemyCoordinates), Direction.LEFT, level);
 	        /*
 	        String enemyMark = "@"; //represents the enemy
 	        Coordinates enemyEscapeCoordinates = getFarthestCorner(level, enemyCoordinates);
@@ -94,7 +94,7 @@ public class GameMain {
 	        //Coordinates powerUpCoordinates = getRandomStartingCoordinates(level);
 	        
 	        //Powerup powerup = new Powerup("*", getRandomStartingCoordinates(level));
-	        Powerup powerup = new Powerup("*", level.getRandomCoordinates());
+	        Powerup powerup = new Powerup("*", level.getRandomCoordinates(), level);
 	        //van powerup, ezek beállítódnak maguktól:
 	        /*
 	        String powerUpMark = "*"; //represents the power-up, egy helyben fog állni
@@ -306,7 +306,7 @@ public class GameMain {
 
 			return randomCoordinates;
 		}
-	    */
+	    
 
 	    //random kezdõ koordináták sorsolása az eneminek, de**
 	    private static Coordinates getRandomStartingCoordinatesForADistance(Level level, Coordinates playerStartingCoordinates, int distance) {
@@ -325,7 +325,7 @@ public class GameMain {
 
 	        return randomCoordinates;
 	    }
-	    
+	    */
 	    //pálya és játékosok kirajzolása
 		public static void draw(Level level, Entity player, Entity enemy, Powerup powerUp) {
 

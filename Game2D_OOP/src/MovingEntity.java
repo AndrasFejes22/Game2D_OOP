@@ -12,8 +12,8 @@ public class MovingEntity extends Entity {
 	 * @param escapeCoordinates
 	 * @param direction
 	 */
-	public MovingEntity(String mark, Coordinates coordinates, Coordinates escapeCoordinates, Direction direction) {
-		super(mark, coordinates);
+	public MovingEntity(String mark, Coordinates coordinates, Coordinates escapeCoordinates, Direction direction, Level level) {
+		super(mark, coordinates, level);
 		this.escapeCoordinates = escapeCoordinates;
 		this.direction = direction;
 	}

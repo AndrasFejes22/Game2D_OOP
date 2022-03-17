@@ -5,7 +5,7 @@ public class Entity {
 	
 	private Coordinates coordinates; 
 	
-	//private Level level;
+	protected Level level;
     
     
 
@@ -16,10 +16,11 @@ public class Entity {
 	 * @param escapeCoordinates
 	 * @param direction
 	 */
-	public Entity(String mark, Coordinates coordinates)  {
+	public Entity(String mark, Coordinates coordinates, Level level) {
 		super();
 		this.mark = mark;
 		this.coordinates = coordinates;
+		this.level = level;
 		
 	}
 

@@ -7,8 +7,8 @@ public class Powerup extends Entity {
     int presenceCounter = 0;
     int activeCounter = 0;
 	
-    public Powerup(String mark, Coordinates coordinates) {
-		super(mark, coordinates);
+    public Powerup(String mark, Coordinates coordinates, Level level) {
+		super(mark, coordinates, level);
 		
 	}
 

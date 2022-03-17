@@ -290,6 +290,23 @@ public class Level {
 		return randomCoordinates;
 	}
 	
+	public Coordinates getRandomStartingCoordinatesForADistance(Coordinates coordinates, int distance) {
+        Coordinates randomCoordinates;
+        int counter = 0; //infinite loop kivédése //////////////EZ MÉG NEM JÓÓÓ
+        do {
+            randomCoordinates = getRandomCoordinates();
+            //**nem lehet a két koordináta közelebb egymáshoz mint distance pályaegység
+        }while(counter++ < 1000 && randomCoordinates.distanceFrom(coordinates) < distance);
+                
+        
+        //helyi Coordinates object volt látrehozva konstruktorával-->átment inline-ba: 3 sorral kevesebb
+        //és a memóriát sem foglaljuk
+        //startingCoordinates.setRow(randomRow);
+        //startingCoordinates.setColumn(randomColumn);
+
+        return randomCoordinates;
+    }
+	
 	
 	
 }
