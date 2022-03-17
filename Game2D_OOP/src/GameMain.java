@@ -143,8 +143,8 @@ public class GameMain {
 				// ez a 3 sor a léptetése a playernek
 				//playerCoordinates = makeMove(player.getDirection(), level, playerCoordinates);//VIDEÓS // új értéket kap a
 				//makeMove(Direction direction, Level level, Coordinates oldCoordinates)
-				player.setCoordinates(makeMove(player.getDirection(), level, player.getCoordinates())); // új értéket kap a
-																							// playerCoordinates
+				//player.setCoordinates(makeMove(player.getDirection(), level, player.getCoordinates())); // új értéket kap a
+				player.makeMove();																			// playerCoordinates
 																							// (paraméter az elõzõ)
 
 				/////// UPDATED ENEMY MOVING////////
@@ -168,7 +168,8 @@ public class GameMain {
 				// kiszedjük a koordinátákat és átadjuk a draw()-nak
 				if (iterationNumber % 2 == 0) {// minden 2. körben lép csak
 					//enemyCoordinates = makeMove(enemyDirection, level, enemyCoordinates);// frissül
-					enemy.setCoordinates(makeMove(enemy.getDirection(), level, enemy.getCoordinates()));// frissül
+					//enemy.setCoordinates(makeMove(enemy.getDirection(), level, enemy.getCoordinates()));// frissül
+					enemy.makeMove();
 				}
 
 				//////POWERUP UPDATEING/////
@@ -269,6 +270,7 @@ public class GameMain {
 	    }
 	    
 	    //maga a mozgás
+	    /*
 	    static Coordinates makeMove(Direction direction, Level level, Coordinates oldCoordinates){
 	        Coordinates newCoordinates = new Coordinates(oldCoordinates.getRow(), oldCoordinates.getColumn());// new Coordinate object
 	        //newCoordinates.setRow(oldCoordinates.getRow());//setting old coordinates
@@ -297,6 +299,38 @@ public class GameMain {
 	        }
 	        return newCoordinates;
 	    }
+	    */
+	    
+	  //pálya és játékosok kirajzolása
+	  		public static void draw(Level level, Entity player, Entity enemy, Powerup powerUp) {
+
+	  			for (int row = 0; row < height; row++) {
+	  				for (int column = 0; column < width; column++) {
+	  					Coordinates coordinatesToDraw = new Coordinates(row, column);
+	  					// coordinatesToDraw.setRow(row);
+	  					// coordinatesToDraw.setColumn(column);
+	  					if (coordinatesToDraw.isSame(player.getCoordinates())) {
+	  						System.out.print(player.getMark());
+	  					} else if (coordinatesToDraw.isSame(enemy.getCoordinates())) {
+	  						System.out.print(enemy.getMark());
+	  					} else if (powerUp.isPresentOnLevel() && coordinatesToDraw.isSame(powerUp.getCoordinates())) {
+	  						System.out.print(powerUp.getMark());
+	  					} else {
+	  						System.out.print(level.getCell(coordinatesToDraw));
+	  					}
+	  				}
+	  				System.out.println();
+	  			}
+	  			System.out.println("Player lives: " + playerLifes);
+	  			if (powerUp.isActive()) {
+	  				System.out.println("power-up is active!");
+	  			}
+	  			if (powerUp.isPresentOnLevel()) {
+	  				System.out.println("power-up is on the board!");
+	  			}
+
+	  		}
+	    
 	    /*
 	    //random kezdõ koordináták sorsolása egy tetszõleges playernek:
 	    static Coordinates getRandomStartingCoordinates(Level level) {
@@ -328,36 +362,8 @@ public class GameMain {
 
 	        return randomCoordinates;
 	    }
-	    */
-	    //pálya és játékosok kirajzolása
-		public static void draw(Level level, Entity player, Entity enemy, Powerup powerUp) {
-
-			for (int row = 0; row < height; row++) {
-				for (int column = 0; column < width; column++) {
-					Coordinates coordinatesToDraw = new Coordinates(row, column);
-					// coordinatesToDraw.setRow(row);
-					// coordinatesToDraw.setColumn(column);
-					if (coordinatesToDraw.isSame(player.getCoordinates())) {
-						System.out.print(player.getMark());
-					} else if (coordinatesToDraw.isSame(enemy.getCoordinates())) {
-						System.out.print(enemy.getMark());
-					} else if (powerUp.isPresentOnLevel() && coordinatesToDraw.isSame(powerUp.getCoordinates())) {
-						System.out.print(powerUp.getMark());
-					} else {
-						System.out.print(level.getCell(coordinatesToDraw));
-					}
-				}
-				System.out.println();
-			}
-			System.out.println("Player lives: " + playerLifes);
-			if (powerUp.isActive()) {
-				System.out.println("power-up is active!");
-			}
-			if (powerUp.isPresentOnLevel()) {
-				System.out.println("power-up is on the board!");
-			}
-
-		}
+	    
+	    
 	    
 	    
 	    

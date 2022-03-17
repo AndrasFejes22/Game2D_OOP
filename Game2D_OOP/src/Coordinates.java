@@ -11,6 +11,10 @@ public class Coordinates {
 		this.row = row;
 		this.column = column;
 	}
+	
+	public Coordinates(Coordinates other) {
+		this(other.getRow(), other.getColumn());
+	}
 
     public int getRow() {
         return row;
