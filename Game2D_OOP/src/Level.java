@@ -279,6 +279,17 @@ public class Level {
 		return level[coordinates.getRow()][coordinates.getColumn()];
 	}
 	
+	public Coordinates getRandomCoordinates() {
+		Coordinates randomCoordinates;
+
+		do {
+			randomCoordinates = new Coordinates(RANDOM.nextInt(height), RANDOM.nextInt(width));
+
+		} while (!isEmpty(randomCoordinates));
+
+		return randomCoordinates;
+	}
+	
 	
 	
 }

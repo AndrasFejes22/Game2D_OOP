@@ -31,7 +31,7 @@ public class GameMain {
 	    	int isPassableCounter = 0;
 	        do {
 	        	level = new Level(RANDOM, height, width);
-	        	level.addRandomWalls(3,4);
+	        	level.addRandomWalls(5,4);
 	            isPassableCounter++;
 	        }while(!level.isPassable());
 	        
@@ -67,7 +67,8 @@ public class GameMain {
 
 	        //////PLAYER//////
 	        //random first coordinates for the player
-	        Coordinates playerCoordinates = getRandomStartingCoordinates(level);
+	        //Coordinates playerCoordinates = getRandomStartingCoordinates(level);
+	        Coordinates playerCoordinates = level.getRandomCoordinates();
 	        MovingEntity player = new MovingEntity("O", playerCoordinates, level.getFarthestCorner(playerCoordinates), Direction.RIGHT);
 	        /*
 	        String playerMark = "O"; //represents the player
@@ -92,7 +93,8 @@ public class GameMain {
 	        //random first coordinates for the power-up
 	        //Coordinates powerUpCoordinates = getRandomStartingCoordinates(level);
 	        
-	        Powerup powerup = new Powerup("*", getRandomStartingCoordinates(level));
+	        //Powerup powerup = new Powerup("*", getRandomStartingCoordinates(level));
+	        Powerup powerup = new Powerup("*", level.getRandomCoordinates());
 	        //van powerup, ezek beállítódnak maguktól:
 	        /*
 	        String powerUpMark = "*"; //represents the power-up, egy helyben fog állni
@@ -180,7 +182,7 @@ public class GameMain {
 				//if (powerUpPresenceCounter >= powerUpInLevel) {// ez*
 				if (powerup.getPresenceCounter() >= powerUpInLevel) {// ez*
 					if (powerup.isPresentOnLevel()) {// jelen van, és fog kapni random koordinátákat
-						powerup.setCoordinates(getRandomStartingCoordinates(level));// frissül
+						powerup.setCoordinates(level.getRandomCoordinates());// frissül
 
 					}
 					//powerUpPresentOnLevel = !powerUpPresentOnLevel; 
@@ -202,7 +204,7 @@ public class GameMain {
 					powerup.deactivate();
 					//powerUpActiveCounter = 0;
 					powerup.resetActiveCounter();
-					powerup.setCoordinates(getRandomStartingCoordinates(level));
+					powerup.setCoordinates(level.getRandomCoordinates());
 
 					player.setEscapeCoordinates(level.getFarthestCorner(player.getCoordinates()));
 
@@ -292,7 +294,7 @@ public class GameMain {
 	        }
 	        return newCoordinates;
 	    }
-
+	    /*
 	    //random kezdõ koordináták sorsolása egy tetszõleges playernek:
 	    static Coordinates getRandomStartingCoordinates(Level level) {
 			Coordinates randomCoordinates;
@@ -304,13 +306,14 @@ public class GameMain {
 
 			return randomCoordinates;
 		}
+	    */
 
 	    //random kezdõ koordináták sorsolása az eneminek, de**
 	    private static Coordinates getRandomStartingCoordinatesForADistance(Level level, Coordinates playerStartingCoordinates, int distance) {
 	        Coordinates randomCoordinates;
 	        int counter = 0; //infinite loop kivédése //////////////EZ MÉG NEM JÓÓÓ
 	        do {
-	            randomCoordinates = getRandomStartingCoordinates(level);
+	            randomCoordinates = level.getRandomCoordinates();
 	            //**nem lehet a két koordináta közelebb egymáshoz mint distance pályaegység
 	        }while(counter++ < 1000 && randomCoordinates.distanceFrom(playerStartingCoordinates) < distance);
 	                
