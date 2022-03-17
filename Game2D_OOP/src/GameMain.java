@@ -172,7 +172,10 @@ public class GameMain {
 				}
 
 				//////POWERUP UPDATEING/////
-				
+				if(powerup.update(powerUpInLevel)) {//játékfajta függõ!!!
+					player.setEscapeCoordinates(level.getFarthestCorner(player.getCoordinates()));
+				}
+				/*
 				if (powerup.isActive()) {
 					powerup.incrementActiveCounter();
 				} else {
@@ -209,8 +212,8 @@ public class GameMain {
 					player.setEscapeCoordinates(level.getFarthestCorner(player.getCoordinates()));
 
 				}
-
-				// player-powerUp interaction handling:
+				*/
+				/////////// player-powerUp interaction handling:////////////
 				if (powerup.isPresentOnLevel() && player.getCoordinates().isSame(powerup.getCoordinates())) {
 					//powerUpActive = true;
 					powerup.activate();

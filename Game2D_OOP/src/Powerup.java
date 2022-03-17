@@ -68,9 +68,47 @@ public class Powerup extends Entity {
 		this.activeCounter = activeCounter;
 	}
 	
+	public boolean update(int refresh) {
+		if (active) {
+			incrementActiveCounter();
+		} else {
+			incrementPrescenceCounter();// EZZEL INDUL A POWERUP////minden iterációban növeljük eggyel a számlálót
+		}
+
+		if (presenceCounter >= refresh) {// ez*
+			if (presentOnLevel) {// jelen van, és fog kapni random koordinátákat
+				setCoordinates(level.getRandomCoordinates());// frissül
+
+			}
+			// powerUpPresentOnLevel = !powerUpPresentOnLevel;
+			// powerup.hideOnLevel();//****** eze így eredetileg hibás a flette lévõ sor nem
+			// váltja ki
+			// ez jobb: (kiváltja)
+
+			if (presentOnLevel) {
+				hideOnLevel();
+			} else {
+				showOnLevel(); // vagy a pályán van, vagy nincs, és mindig///?????
+			} // kiváltjuk x (most 20) körönként ennek az
+				// ellenkezõjét
+			resetPrescenceCounter(); // *meg ez csinálja hogy mindig elõlrõl kezdõdhessen a számlálás és 20
+										// körig van pUp, 20 körig nincs
+			// és így tovább
+		}
+		if (activeCounter >= refresh) {
+			// powerUpActive = false;
+			deactivate();
+			// powerUpActiveCounter = 0;
+			resetActiveCounter();
+			setCoordinates(level.getRandomCoordinates());
+
+			//player.setEscapeCoordinates(level.getFarthestCorner(player.getCoordinates()));
+			return true;
+		}
+		return false;
+	}
 	
-	
-	
+
     
 	
 
