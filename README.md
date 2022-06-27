@@ -1,5 +1,7 @@
 # Game2D_OOP
 
+Based on Hungarian A&K Akadémia BasicGame tutorials.
+
 Features:
 	It always generates a field in which there are no enclosed spaces.
   
